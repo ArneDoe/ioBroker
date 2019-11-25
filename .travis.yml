@@ -130,7 +130,7 @@ script:
     if [ ! -e iob_not_installed ]; then
       # Stop ioBroker processes before running the fixer
       IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
-      node /opt/iobroker/node_modules/iobroker.js-controller/iobroker.js stop
+      node "$IOB_DIR/node_modules/iobroker.js-controller/iobroker.js" stop
       sleep 60
       # Grace time is over, kill all remaining processes
       ps -ef | grep -E 'io\.[a-zA-Z0-9_\-]+\.[0-9]+' | awk '{print $2}' | xargs -r kill -9
