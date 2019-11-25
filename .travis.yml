@@ -129,12 +129,11 @@ script:
   - |
     if [ ! -e iob_not_installed ]; then
       # Stop ioBroker processes before running the fixer
-      if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        launchctl unload -w "/Users/${USER}/Library/LaunchAgents/org.ioBroker.LaunchAtLogin.plist"
-      else
-        node /opt/iobroker/node_modules/iobroker.js-controller/iobroker.js stop
-      fi
+      IOB_DIR=$([ -d /opt/iobroker ] && echo "/opt/iobroker" || echo "/usr/local/iobroker")
+      node /opt/iobroker/node_modules/iobroker.js-controller/iobroker.js stop
       sleep 60
+      # Grace time is over, kill all remaining processes
+      ps -ef | grep -E 'io\.[a-zA-Z0-9_\-]+\.[0-9]+' | awk '{print $2}' | xargs -r kill -9
       # Run the fixer
       cd $TEST_DIR
       sudo chmod +x ./fix_installation.sh
