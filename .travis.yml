@@ -133,7 +133,7 @@ script:
       node "$IOB_DIR/node_modules/iobroker.js-controller/iobroker.js" stop
       sleep 60
       # Grace time is over, kill all remaining processes
-      ps -ef | grep -E 'io\.[a-zA-Z0-9_\-]+\.[0-9]+' | awk '{print $2}' | xargs -r kill -9
+      ps -ef | grep -E 'io\.[a-zA-Z0-9_\-]+\.[0-9]+' | awk '{print $2}' | xargs kill -9
       # Run the fixer
       cd $TEST_DIR
       sudo chmod +x ./fix_installation.sh
