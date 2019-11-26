@@ -462,7 +462,7 @@ change_npm_command_root
 unset AUTOMATED_INSTALLER
 
 # Detect IP address (this stores the IP address in $IP)
-detect_ip_address IP
+IP=$(detect_ip_address)
 print_bold "${green}ioBroker was installed successfully${normal}" "Open http://$IP:8081 in a browser and start configuring!"
 
 print_msg "${yellow}You need to re-login before doing anything else on the console!${normal}"
