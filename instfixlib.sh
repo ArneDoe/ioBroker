@@ -657,15 +657,12 @@ install_nodejs() {
 }
 
 detect_ip_address() {
-	# Detect IP address
-	local IP
-	IP_COMMAND=$(type "ip" &> /dev/null && echo "ip addr show" || echo "ifconfig")
-	if [ "$HOST_PLATFORM" = "osx" ]; then
-		IP=$($IP_COMMAND | grep inet | grep -v inet6 | grep -v 127.0.0.1 | grep -Eo "([0-9]+\.){3}[0-9]+" | head -1)
-	else
-		IP=$($IP_COMMAND | grep inet | grep -v inet6 | grep -v 127.0.0.1 | grep -Eo "([0-9]+\.){3}[0-9]+\/[0-9]+" | cut -d "/" -f1)
-	fi
-	echo $IP
+	# Based on https://stackoverflow.com/a/13322667/10179833
+	local _ip _myip _line _nl=$'\n'
+	while IFS=$': \t' read -a _line; do
+		[ -z "${_line%inet}" ] && _ip=${_line[${#_line[1]}>4?1:2]} && [ "${_ip#127.0.0.1}" ] && _myip=$_ip
+	done< <(LANG=C /sbin/ifconfig)
+	printf ${1+-v} $1 "%s${_nl:0:$[${#1}>0?0:1]}" $_myip
 }
 
 echo "library: loaded"
